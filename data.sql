@@ -10,7 +10,7 @@ SET
 --
 -- Create model user
 --
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `fname` varchar(55) NOT NULL,
     `lname` varchar(55) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `user` (
     `description` varchar(300) NOT NULL
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1 AUTO_INCREMENT=10;
 
-INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, 'description') VALUES
+INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, `description`) VALUES
 (1, 'Testguy', 'Test', 'abcde@a.com', '', 'its me'),
 (2, 'Testguy', 'newname', 'a@a.com', '', 'NO its not'),
 (3, 'Tom', 'Test', 'b@a.com', '123', 'yes it is'),
@@ -28,7 +28,7 @@ INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, 'description') 
 --
 -- Create model file
 --
-CREATE TABLE `file` (
+CREATE TABLE IF NOT EXISTS `file` (
     `fid` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `content_length` integer NOT NULL,
     `update_time` datetime(6) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `file` (
 --
 -- Create model shared_file
 --
-CREATE TABLE `shared_file` (
+CREATE TABLE IF NOT EXISTS `shared_file` (
     `user_id` integer NOT NULL,
     `user_file_id` integer NOT NULL,
     `id` varchar(36) NOT NULL PRIMARY KEY,
@@ -49,7 +49,7 @@ CREATE TABLE `shared_file` (
 --
 -- Create model user_file
 --
-CREATE TABLE `user_file` (
+CREATE TABLE IF NOT EXISTS `user_file` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `user_id` integer NOT NULL,
     `file_id` integer NOT NULL,
