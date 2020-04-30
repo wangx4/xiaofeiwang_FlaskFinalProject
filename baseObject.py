@@ -7,7 +7,7 @@ class baseObject:
     def setupObject(self, tn):
         self.tn = tn
         self.fnl = []
-        self.required_fields = []  # info needed when insert
+        self.required_fields = []  # field needed when insert
         self.pk = ''
         self.conn = self.connect()
         self.errorList = []
@@ -165,12 +165,14 @@ class baseObject:
         return cur.lastrowid
 
     def update(self, data):
+        print(data)
         if self.pk not in data:
             print("pk is required")
             return
         new_vals = dict()
-        for field in self.required_fields:
-            if field in data:
+        print(self.required_fields)
+        for field in self.fnl:
+            if field in data and field != self.pk:
                 new_vals[field] = data[field]
         if len(new_vals) == 0:
             print("no new vals to update")

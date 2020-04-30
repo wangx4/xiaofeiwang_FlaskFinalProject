@@ -12,24 +12,20 @@
 
 
 
-<h1>My Files</h1>
-<a href="/uploadfile">Add new file</a>
+<h1>Recycle bin files</h1>
 <br>
 <br>
 <table>
   <tr>
     <td>file_id&nbsp;&nbsp;&nbsp;</td>
     <td>filename&nbsp;&nbsp;&nbsp;</td>
-    <td>Shared?&nbsp;&nbsp;&nbsp;</td>
   </tr>
   {% for file in files %}
   <tr>
     <td>{{ file.id }}&nbsp;&nbsp;&nbsp;</td>
     <td>{{ file.filename }}&nbsp;&nbsp;&nbsp;</td>
-    <td>{{ file.is_shared }}&nbsp;&nbsp;&nbsp;</td>
-    <td><a href="/downloadfile?id={{file.id}}">Download&nbsp;&nbsp;&nbsp;</a></td>
-    <td><a href="/sharefile?id={{file.id}}">Share file&nbsp;&nbsp;&nbsp;</a></td>
-    <td><a href="/deletefile?id={{file.id}}">Delete file</a></td>
+    <td><a href="/recoverfile?id={{file.id}}">Recover&nbsp;&nbsp;&nbsp;</a></td>
+    <td><a href="/reallydeletefile?id={{file.id}}">Permanent delete</a></td>
   </tr>
   {% endfor %}
 </table>
