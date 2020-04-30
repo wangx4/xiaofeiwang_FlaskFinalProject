@@ -8,6 +8,10 @@ from werkzeug.utils import secure_filename
 import time, os
 
 from user import userList
+from file import fileList
+from user_file import userFileList
+from shared_file import sharedFileList
+
 import config
 
 
@@ -54,12 +58,14 @@ def login():
     -check session on login pages
     '''
     print('-------------------------')
-    if request.form.get('email') is not None and request.form.get(
-            'password') is not None:
-        c = userList()
-        if c.tryLogin(request.form.get('email'), request.form.get('password')):
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if email != None and password != None:
+        users = userList()
+        is_ok, user_data = users.tryLogin(email,password)
+        if is_ok:
             print('login ok')
-            session['user'] = c.data[0]
+            session['user'] = user_data
             session['active'] = time.time()
 
             return redirect('main')

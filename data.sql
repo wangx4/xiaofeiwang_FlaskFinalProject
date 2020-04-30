@@ -4,6 +4,7 @@ SET
 SET
     time_zone = "+00:00";
 
+use flask_app;
 --
 -- Database: `flask_app`
 --
@@ -28,11 +29,11 @@ INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, `description`) 
 --
 -- Create model file
 --
+--`content_length` integer NOT NULL,
+--`update_time` datetime(6) NOT NULL,
+--`storage_path` varchar(200) NOT NULL,
 CREATE TABLE IF NOT EXISTS `file` (
     `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    --`content_length` integer NOT NULL,
-    --`update_time` datetime(6) NOT NULL,
-    --`storage_path` varchar(200) NOT NULL,
     `storage_name` varchar(300) NOT NULL
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
 
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `shared_file` (
     `user_id` integer NOT NULL,
     `user_file_id` integer NOT NULL,
     `id` varchar(36) NOT NULL PRIMARY KEY,
-    `access_key` varchar(4) NOT NULL
+    `access_token` varchar(4) NOT NULL
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
 
 --

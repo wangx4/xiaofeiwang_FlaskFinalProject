@@ -7,6 +7,7 @@ class baseObject:
     def setupObject(self, tn):
         self.tn = tn
         self.fnl = []
+        self.required_fields = []  # info needed when insert
         self.pk = ''
         self.conn = self.connect()
         self.errorList = []
@@ -31,6 +32,9 @@ class baseObject:
             self.fnl.append(row['Field'])
             if row['Key'] == 'PRI':
                 self.pk = row['Field']
+            if row['Null'] == 'NO' and row[
+                    'Extra'] != 'auto_increment' and row['Default'] == None:
+                self.required_fields.append(row['Field'])
 
     def getById(self, id):
         sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + self.pk + '` = %s;'
@@ -107,7 +111,62 @@ class baseObject:
             xs.append(row)
         return xs
 
-    def log(self, sql, tokens=[]):
+    def insert(self, data):
+        """insert table with data"""
+        if not all(required_field in data
+                   for required_field in self.required_fields):
+            print(f"data must contains {self.required_fields}")
+            return
+        tokens = []
+        for field in self.required_fields:
+            tokens.append(data[field])
+
+        vals = ['%s'] * len(self.required_fields)
+        vals = ','.join(vals)
+        cols = map(lambda fieldname: '`' + fieldname + '`',
+                   self.required_fields)
+        cols = ','.join(cols)
+
+        sql = 'INSERT INTO `' + self.tn + '` (' + cols + ') VALUES (' + vals + ');'
+        #self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        print(sql)
+        print(tokens)
+        self.log(sql, tokens)
+        cur.execute(sql, tokens)
+        #self.data[n][self.pk] = cur.lastrowid
+        return cur.lastrowid
+
+    def update(self, data):
+        if self.pk not in data:
+            print("pk is required")
+            return
+        new_vals = dict()
+        for field in self.required_fields:
+            if field in data:
+                new_vals[field] = data[field]
+        if len(new_vals) == 0:
+            print("no new vals to update")
+            return
+        setstring = ''
+        tokens = []
+        for fieldname, val in new_vals.items():
+            setstring += ' `' + fieldname + '` = %s,'
+            tokens.append(val)
+        setstring = setstring[:-1]
+        tokens.append(data[self.pk])
+
+        sql = 'UPDATE `' + self.tn + '` SET ' + setstring + ' WHERE `' + self.pk + '` = %s;'
+
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        print(sql)
+        print(tokens)
+        self.log(sql, tokens)
+        cur.execute(sql, tokens)
+
+    def log(self, sql, tokens=None):
+        if tokens == None:
+            tokens = []
         f = open('logs/sql_log.txt', 'a')
         import datetime
         now = datetime.datetime.now()

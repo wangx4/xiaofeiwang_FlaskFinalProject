@@ -1,4 +1,4 @@
-import pymysql
+
 from baseObject import baseObject
 
 class fileList(baseObject):

@@ -7,6 +7,7 @@ class userList(baseObject):
     #this is the assignment
     def __init__(self):
         self.setupObject('user')
+    """
 
     def verifyNew(self, n=0):
         self.errorList = []
@@ -48,22 +49,26 @@ class userList(baseObject):
             return False
         else:
             return True
+    """
 
     def tryLogin(self, email, pw):
         #SELECT * FROM `conlontj_customers` WHERE `email` = 'b@a.com' AND `password` = '123'
         sql = 'SELECT * FROM `' + self.tn + '` WHERE `email` = %s AND `password` = %s;'
         tokens = (email, pw)
-        self.connect()
+        #self.connect()
         cur = self.conn.cursor(pymysql.cursors.DictCursor)
         #print(sql)
         #print(tokens)
         cur.execute(sql, tokens)
-        self.data = []
+        #self.data = []
         n = 0
+        user_data = None
         for row in cur:
-            self.data.append(row)
+            #self.data.append(row)
             n += 1
+            user_data = row
+            break
         if n > 0:
-            return True
+            return True,user_data
         else:
-            return False
+            return False,user_data
