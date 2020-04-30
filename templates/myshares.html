@@ -20,16 +20,15 @@
   <tr>
     <td>file_id&nbsp;&nbsp;&nbsp;</td>
     <td>filename&nbsp;&nbsp;&nbsp;</td>
-    <td>Shared?&nbsp;&nbsp;&nbsp;</td>
+    <td>sharelink&nbsp;&nbsp;&nbsp;</td>
+    <td>access_token&nbsp;&nbsp;&nbsp;</td>
   </tr>
   {% for file in files %}
   <tr>
-    <td>{{ file.id }}&nbsp;&nbsp;&nbsp;</td>
+    <td>{{ file.user_file_id }}&nbsp;&nbsp;&nbsp;</td>
     <td>{{ file.filename }}&nbsp;&nbsp;&nbsp;</td>
-    <td>{{ file.is_shared }}&nbsp;&nbsp;&nbsp;</td>
-    <td><a href="/downloadfile?id={{file.id}}">Download&nbsp;&nbsp;&nbsp;</a></td>
-    <td><a href="/sharefile?id={{file.id}}">Share file&nbsp;&nbsp;&nbsp;</a></td>
-    <td><a href="/deletefile?id={{file.id}}">Delete file</a></td>
+    <td><a href="/s/{{file.id}}">/s/{{file.id}}&nbsp;&nbsp;&nbsp;</a></td>
+    <td>{{ file.access_token }}</td>
   </tr>
   {% endfor %}
 </table>

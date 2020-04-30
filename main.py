@@ -240,7 +240,10 @@ def recycle_bin():
     user_id = session['user']['id']
     user_files = userFileList()
     this_user_files = user_files.getByField('user_id', user_id)
-    this_user_files = [this_file for this_file in this_user_files if this_file['is_deleted'] == 1]
+    this_user_files = [
+        this_file for this_file in this_user_files
+        if this_file['is_deleted'] == 1
+    ]
     for file in this_user_files:
         if file['is_shared'] == 0:
             file['is_shared'] = "No"
@@ -248,13 +251,163 @@ def recycle_bin():
             file['is_shared'] = "Yes"
 
     userinfo = 'Hello, ' + session['user']['fname']
-    return render_template('recycle_bin.html', title='Main menu', msg=userinfo, files= this_user_files, status_msg=status_msg)
+    return render_template('recycle_bin.html',
+                           title='Main menu',
+                           msg=userinfo,
+                           files=this_user_files,
+                           status_msg=status_msg)
 
+
+@app.route('/recoverfile')
+@login_required
+def recoverfile():
+    user_file_id = request.args.get('id')
+    temp = user_file_id
+    try:
+        user_file_id = int(user_file_id)
+    except:
+        return redirect(
+            url_for('recycle_bin',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    user_files = userFileList()
+    query_data = {
+        'user_id': int(session['user']['id']),
+        'file_id': int(user_file_id)
+    }
+    this_user_file = user_files.getByFields(query_data)
+    print(this_user_file)
+    if len(this_user_file) == 0:
+        return redirect(
+            url_for('main',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    if this_user_file[0]['is_deleted'] == 0:
+        return redirect(
+            url_for(
+                'recycle_bin',
+                status_msg=f"recycle bin file with {user_file_id} did not found"
+            ))
+    data = {'is_deleted': 0, 'id': user_file_id}
+    user_files.update(data)
+
+    return redirect(
+        url_for('recycle_bin',
+                status_msg=f"recover file with id = `{user_file_id}` succeed"))
+
+
+@app.route('/reallydeletefile')
+@login_required
+def reallydeletefile():
+    user_file_id = request.args.get('id')
+    temp = user_file_id
+    try:
+        user_file_id = int(user_file_id)
+    except:
+        return redirect(
+            url_for('recycle_bin',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    user_files = userFileList()
+    query_data = {
+        'user_id': int(session['user']['id']),
+        'file_id': int(user_file_id)
+    }
+    this_user_file = user_files.getByFields(query_data)
+    print(this_user_file)
+    if len(this_user_file) == 0:
+        return redirect(
+            url_for('recycle_bin',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    if this_user_file[0]['is_deleted'] == 0:
+        return redirect(
+            url_for(
+                'recycle_bin',
+                status_msg=f"recycle bin file with {user_file_id} did not found"
+            ))
+
+    user_files.deleteById(user_file_id)
+
+    return redirect(
+        url_for('recycle_bin',
+                status_msg=f"delete file with id = `{user_file_id}` succeed"))
+
+
+@app.route('/sharefile')
+@login_required
+def sharefile():
+    user_file_id = request.args.get('id')
+    temp = user_file_id
+    try:
+        user_file_id = int(user_file_id)
+    except:
+        return redirect(
+            url_for('main',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    user_files = userFileList()
+    query_data = {
+        'user_id': int(session['user']['id']),
+        'file_id': int(user_file_id)
+    }
+    this_user_file = user_files.getByFields(query_data)
+    print(this_user_file)
+    if len(this_user_file) == 0:
+        return redirect(
+            url_for('main',
+                    status_msg=f"file with id = `{temp}` did not found"))
+
+    if this_user_file[0]['is_deleted'] == 1:
+        return redirect(
+            url_for(
+                'main',
+                status_msg=f"file with {user_file_id} did not found"
+            ))
+
+    shared_files = sharedFileList()
+    share_id = util.gen_share_id()
+    access_token = util.gen_access_token()
+
+    data = {
+        'id': share_id,
+        'access_token': access_token,
+        'user_id': query_data['user_id'],
+        'user_file_id': user_file_id,
+        'filename':this_user_file[0]['filename']
+    }
+    shared_files.insert(data)
+
+    return redirect(
+        url_for(
+            'main',
+            status_msg=
+            f"share file with id = `{user_file_id}` succeed, the share link is {config.share_link_prefix+share_id}"
+        ))
+
+
+@app.route('/myshares')
+@login_required
+def myshares():
+    status_msg = request.args.get('status_msg')
+    user_id = session['user']['id']
+    shared_files = sharedFileList()
+    this_user_shared_files = shared_files.getByField('user_id', user_id)
+    print(this_user_shared_files)
+
+    userinfo = 'Hello, ' + session['user']['fname']
+    return render_template('myshares.html',
+                           title='My shares',
+                           msg=userinfo,
+                           files=this_user_shared_files,
+                           status_msg=status_msg)
 """
     if checkSession() == False:
         return redirect('login')
 """
-
+@app.route('/s/<share_id>')
+def handle_share():
+    pass
 
 @app.errorhandler(404)
 def page_not_found(e):

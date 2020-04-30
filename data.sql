@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS `shared_file` (
     `user_id` integer NOT NULL,
     `user_file_id` integer NOT NULL,
     `id` varchar(36) NOT NULL PRIMARY KEY,
-    `access_token` varchar(4) NOT NULL
+    `access_token` varchar(4) NOT NULL,
+    `filename` varchar(200) NOT NULL
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
 
 --

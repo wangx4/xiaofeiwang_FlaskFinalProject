@@ -17,3 +17,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 FILE_STORAGE_FOLDER = UPLOAD_FOLDER
 
 print(UPLOAD_FOLDER)
+
+
+share_link_prefix = "http://localhost:5000/s/"
