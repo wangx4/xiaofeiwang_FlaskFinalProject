@@ -56,7 +56,7 @@ class baseObject:
         #self.connect()
         cur = self.conn.cursor(pymysql.cursors.DictCursor)
         print(sql)
-        print(tokens)
+        #print(tokens)
         self.log(sql)
         cur.execute(sql)
         #self.data = []
