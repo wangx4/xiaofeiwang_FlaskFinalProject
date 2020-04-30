@@ -360,10 +360,8 @@ def sharefile():
 
     if this_user_file[0]['is_deleted'] == 1:
         return redirect(
-            url_for(
-                'main',
-                status_msg=f"file with {user_file_id} did not found"
-            ))
+            url_for('main',
+                    status_msg=f"file with {user_file_id} did not found"))
 
     shared_files = sharedFileList()
     share_id = util.gen_share_id()
@@ -374,10 +372,12 @@ def sharefile():
         'access_token': access_token,
         'user_id': query_data['user_id'],
         'user_file_id': user_file_id,
-        'filename':this_user_file[0]['filename']
+        'filename': this_user_file[0]['filename']
     }
     shared_files.insert(data)
 
+    data = {'is_shared': 1, 'id': user_file_id}
+    user_files.update(data)
     return redirect(
         url_for(
             'main',
@@ -401,13 +401,66 @@ def myshares():
                            msg=userinfo,
                            files=this_user_shared_files,
                            status_msg=status_msg)
+
+
 """
     if checkSession() == False:
         return redirect('login')
 """
+
+
 @app.route('/s/<share_id>')
-def handle_share():
-    pass
+def handle_share(share_id):
+    shared_files = sharedFileList()
+    if request.method == 'POST':
+        token = request.form.get('token')
+        this_shared_file = shared_files.getById(share_id)
+        if len(this_shared_file) == 0:
+            return render_template(
+                'share.html',
+                status_msg=f"share with share_id = `{share_id}` does not exist"
+            )
+
+        if this_shared_file[0]['access_token'] != token:
+            return render_template('share.html', status_msg=f"token incorrect")
+
+        user_files = userFileList()
+        this_user_file = user_files.getById(
+            this_shared_file[0]['user_file_id'])
+        if len(this_user_file) == 0 or this_user_file[0][
+                'is_deleted'] == 1 or this_user_file[0]['is_shared'] == 0:
+            return render_template(
+                'share.html',
+                status_msg=f"share with share_id = `{share_id}` does not exist"
+            )
+
+        filename = this_shared_file[0]['filename']
+        file_id = this_user_file[0]['file_id']
+        files = fileList()
+        this_file = files.getById(file_id)
+        file_storage_name = this_file[0]['storage_name']
+        file_abs_path = os.path.join(config.UPLOAD_FOLDER, file_storage_name)
+        return send_file(file_abs_path,
+                         as_attachment=True,
+                         attachment_filename=filename)
+
+    this_shared_file = shared_files.getById(share_id)
+    if len(this_shared_file) == 0:
+        return render_template(
+            'share.html',
+            status_msg=f"share with share_id = `{share_id}` does not exist")
+    user_files = userFileList()
+    this_user_file = user_files.getById(this_shared_file[0]['user_file_id'])
+    if len(this_user_file) == 0 or this_user_file[0][
+            'is_deleted'] == 1 or this_user_file[0]['is_shared'] == 0:
+        return render_template(
+            'share.html',
+            status_msg=f"share with share_id = `{share_id}` does not exist")
+
+    return render_template(
+        'share.html', share_exist=True,
+        filename='youknow')  #filename=this_shared_file[0]['filename']
+
 
 @app.errorhandler(404)
 def page_not_found(e):
