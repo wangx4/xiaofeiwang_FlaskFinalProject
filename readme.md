@@ -11,4 +11,4 @@ Allow users to upload, download, delete and share thier files.
 ## relational diagram
 
 
-![relational diagram](./images/relational_diagram.png)
+![relational diagram](./docs/images/relational_diagram.png)

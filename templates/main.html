@@ -1,0 +1,32 @@
+{% extends "base.html" %} 
+
+
+{% block content %} 
+
+
+{% if msg %}
+<div id="menumsg">
+  {{ msg }}
+</div>
+{% endif %} 
+
+
+
+<h1>My Files</h1>
+<a href="/uploadfile">Add new file</a>
+<table>
+  <tr>
+    <td>id</td>
+    <td>filename</td>
+    <td>Is sheared?</td>
+  </tr>
+  {% for file in files %}
+  <tr>
+    <td><a href="file?id={{ file.id }}">{{ file.id }}</a></td>
+    <td>{{ file.filename }}</td>
+    <td>{{ file.is_shared }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

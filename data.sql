@@ -29,10 +29,10 @@ INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, `description`) 
 -- Create model file
 --
 CREATE TABLE IF NOT EXISTS `file` (
-    `fid` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `content_length` integer NOT NULL,
-    `update_time` datetime(6) NOT NULL,
-    `storage_path` varchar(200) NOT NULL,
+    `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    --`content_length` integer NOT NULL,
+    --`update_time` datetime(6) NOT NULL,
+    --`storage_path` varchar(200) NOT NULL,
     `storage_name` varchar(300) NOT NULL
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
 

@@ -5,10 +5,15 @@
     {% else %}
     <title>Welcome</title>
     {% endif %}
-
   </head>
   <body>
-    <div>Goto: <a href="/main">Main menu</a> <a href="/logout">Logout</a></div>
+    <div>
+      Goto: <a href="/main">Main menu </a>
+      <a href="/logout">Logout </a>
+      <a href="/uploadfile">Upload file</a>
+      <a href="/share">Share file</a>
+      <a href="/myreviews">My reviews</a><br />
+    </div>
     <hr />
     {% block content %}{% endblock %}
   </body>
