@@ -14,19 +14,31 @@
 
 <h1>My Files</h1>
 <a href="/uploadfile">Add new file</a>
+<br>
+<br>
 <table>
   <tr>
-    <td>id</td>
-    <td>filename</td>
-    <td>Is sheared?</td>
+    <td>file_id    </td>
+    <td>filename    </td>
+    <td>Shared?    </td>
   </tr>
   {% for file in files %}
   <tr>
-    <td><a href="file?id={{ file.id }}">{{ file.id }}</a></td>
+    <td>{{ file.id }}</td>
     <td>{{ file.filename }}</td>
     <td>{{ file.is_shared }}</td>
+    <td><a href="/downloadfile?id={{file.id}}">Download</a></td>
+    <td><a href="/sharefile?id={{file.id}}">Share file</a></td>
   </tr>
   {% endfor %}
 </table>
+<br>
+<br>
+<br>
+{% if status_msg %}
+<div id="status_msg" style="color: red;">
+  {{ status_msg }}
+</div>
+{% endif %} 
 
 {% endblock %}

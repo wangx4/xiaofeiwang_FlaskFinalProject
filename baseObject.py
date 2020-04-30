@@ -95,6 +95,33 @@ class baseObject:
             #self.data.append(row)
             xs.append(row)
         return xs
+    
+    def getByFields(self, data):
+        fields = []
+        tokens = []
+        tail = []
+        for field,token in data.items():
+            fields.append(field)
+            tokens.append(token)
+            tail.append("`"+field+"`" + ' = %s ')
+        tail = ' AND '.join(tail)
+        
+        #sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + field + '` = %s;'
+        sql = 'SELECT * FROM `' + self.tn + '` WHERE ' + tail+' ;'
+        print(sql)
+        #self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        print(sql)
+        print(tokens)
+        self.log(sql, tokens)
+        cur.execute(sql, tokens)
+        #self.data = []
+        xs = []
+        for row in cur:
+            #self.data.append(row)
+            xs.append(row)
+        return xs
+
 
     def getLikeField(self, field, value):
         sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + field + '` LIKE %s;'

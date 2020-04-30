@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `lname` varchar(55) NOT NULL,
     `email` varchar(55) NOT NULL,
     `password` varchar(100) NOT NULL,
-    `description` varchar(300) NOT NULL
+    `description` varchar(300) NOT NULL DEFAULT ''
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1 AUTO_INCREMENT=10;
 
 INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, `description`) VALUES
@@ -55,6 +55,6 @@ CREATE TABLE IF NOT EXISTS `user_file` (
     `user_id` integer NOT NULL,
     `file_id` integer NOT NULL,
     `filename` varchar(200) NOT NULL,
-    `is_shared` bool NOT NULL,
-    `is_deleted` bool NOT NULL
+    `is_shared` bool NOT NULL DEFAULT false,
+    `is_deleted` bool NOT NULL DEFAULT false
 ) ENGINE = MyISAM DEFAULT CHARSET = latin1;
