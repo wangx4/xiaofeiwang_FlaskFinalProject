@@ -1,12 +1,10 @@
 # A simple flask app
 
-## What's the purpose of this app ?
+## Narrative / outline
+This file storage app is an application to storage user's files. Users may upload, delete
+download and share thier files.Only logined user can upload,delete and share thier files,
+a anonymous user may download the file shared by other user with a access token.
 
-Offer a simple way to manage files, upload, download, delete and share.
-
-## What this app do ?
-
-Allow users to upload, download, delete and share thier files.
 
 ## relational diagram
 
@@ -20,15 +18,14 @@ Allow users to upload, download, delete and share thier files.
 | a@a.com        | ''       |
 | b@a.com        | 123      |
 | abcde@a.com    | ''       |
-| admin@root.com | 123      |
-| a@b.com        | 12345    |
+
 
 ## how to run this app?
 python >= 3.7
 
 change the config.DB to your config, create a database named flask_app for your app.
 
-run as a new app(make sure requirements.txt is in the current directory):
+run as a new app:
 ```shell
 $ pip install virtualenv
 
