@@ -24,7 +24,7 @@ INSERT INTO `user` (`id`, `fname`, `lname`, `email`, `password`, `description`) 
 (1, 'Testguy', 'Test', 'abcde@a.com', '', 'its me'),
 (2, 'Testguy', 'newname', 'a@a.com', '', 'NO its not'),
 (3, 'Tom', 'Test', 'b@a.com', '123', 'yes it is'),
-(4, 'Testguy', 'Test', 'a@a.com', '12345', 'short'),
+(4, 'Testguy', 'Test', 'a@b.com', '12345', 'short'),
 (5, 'Test', 'Testtest', 'admin@root.com', '123', '');
 --
 -- Create model file
