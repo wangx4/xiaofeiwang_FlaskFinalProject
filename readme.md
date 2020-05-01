@@ -48,6 +48,10 @@ run with records,unzip the local zip file:
 ```shell
 $ cd my_unzip_project_dir
 
+$ mysql -u yourusername -p
+
+MYSQL [flask_app]> source database_export.sql;
+
 $ source venv/bin/activate
 
 $ python main.py
