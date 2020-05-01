@@ -382,7 +382,7 @@ def sharefile():
         url_for(
             'main',
             status_msg=
-            f"share file with id = `{user_file_id}` succeed, the share link is {config.share_link_prefix+share_id}"
+            f"share file with id = `{user_file_id}` succeed, the share link is {config.share_link_prefix+share_id} the access token is {access_token}"
         ))
 
 
