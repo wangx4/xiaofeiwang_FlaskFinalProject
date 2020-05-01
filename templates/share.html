@@ -18,12 +18,12 @@
 
     
     <p>input access token to download the file </p>
-    <form  method="POST">
+    <form action="{{link}}"  method="POST">
 			
 
         <input type="text" name="token" placeholder="access token" /><br><br>
               
-        <input type="submit" value="download file"/>
+        <input type="submit" value="verify"/>
         
     </form>
 
@@ -32,6 +32,13 @@
     <div id="status_msg" style="color: red;">
       {{ status_msg }}
     </div>
+    {% endif %} 
+
+    <br>
+
+    {% if download_link %}
+     <p> <a href="{{download_link }}">download file</a></p>
+
     {% endif %} 
   </body>
 </html>

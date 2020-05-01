@@ -408,9 +408,38 @@ def myshares():
         return redirect('login')
 """
 
-
-@app.route('/s/<share_id>')
+def checkSession2():
+    if 'active' in session.keys():
+        timeSinceAct = time.time() - session['active']
+        print(timeSinceAct)
+        if timeSinceAct <= 600 and 'verified' in session.keys() and session['verified'] == True:  # if a user has no action more than 10 minutes, the session is expired
+            return True
+        else:
+            session['msg'] = 'Your session has timed out.'
+            return False
+    else:
+        return False
+@app.route('/s/<share_id>',methods=['GET','POST'])
 def handle_share(share_id):
+    if checkSession2() and request.args.get('action') == 'download':
+        shared_files = sharedFileList()
+        user_files = userFileList()
+        this_shared_file = shared_files.getById(share_id)
+        this_user_file = user_files.getById(
+            this_shared_file[0]['user_file_id'])
+        filename = this_shared_file[0]['filename']
+        file_id = this_user_file[0]['file_id']
+        user_files = userFileList()
+        
+        files = fileList()
+        this_file = files.getById(file_id)
+        file_storage_name = this_file[0]['storage_name']
+        file_abs_path = os.path.join(config.UPLOAD_FOLDER, file_storage_name)
+        return send_file(file_abs_path,
+                         as_attachment=True,
+                         attachment_filename=filename)
+
+
     shared_files = sharedFileList()
     if request.method == 'POST':
         token = request.form.get('token')
@@ -422,7 +451,9 @@ def handle_share(share_id):
             )
 
         if this_shared_file[0]['access_token'] != token:
-            return render_template('share.html', status_msg=f"token incorrect")
+            return render_template('share.html', status_msg=f"token incorrect",filename=this_shared_file[0]['filename'],
+                                share_exist=True,
+                                link=f"/s/{share_id}")
 
         user_files = userFileList()
         this_user_file = user_files.getById(
@@ -433,7 +464,15 @@ def handle_share(share_id):
                 'share.html',
                 status_msg=f"share with share_id = `{share_id}` does not exist"
             )
+        session['active'] = time.time()
+        session['verified'] = True
 
+        return render_template('share.html', download_link = f"/s/{share_id}?action=download",
+                                filename=this_shared_file[0]['filename'],
+                                share_exist=True,
+                                link=f"/s/{share_id}")
+
+        """
         filename = this_shared_file[0]['filename']
         file_id = this_user_file[0]['file_id']
         files = fileList()
@@ -443,6 +482,7 @@ def handle_share(share_id):
         return send_file(file_abs_path,
                          as_attachment=True,
                          attachment_filename=filename)
+        """
 
     this_shared_file = shared_files.getById(share_id)
     if len(this_shared_file) == 0:
@@ -459,7 +499,7 @@ def handle_share(share_id):
 
     return render_template(
         'share.html', share_exist=True,
-        filename='youknow')  #filename=this_shared_file[0]['filename']
+        filename=this_shared_file[0]['filename'],link=f"/s/{share_id}")  #filename=this_shared_file[0]['filename']
 
 
 @app.errorhandler(404)
